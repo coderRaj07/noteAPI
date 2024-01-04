@@ -1,28 +1,20 @@
+// src/middleware/noteController.js
 const noteService = require('../services/noteService');
 const { esClient, createIndex } = require('../config/elasticsearch');
 const mongoose = require('mongoose');
-const q = require('q'); // Add Q library
 
 async function getNotes(req, res) {
-  const deferred = q.defer();
-
   try {
     const userId = req.user._id;
     const userNotes = await noteService.getNotes(userId);
     res.json(userNotes);
-    deferred.resolve();
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal Server Error' });
-    deferred.reject(error);
   }
-
-  return deferred.promise;
 }
 
 async function getNoteById(req, res) {
-  const deferred = q.defer();
-
   try {
     const noteId = req.params.id;
     const noteObjectId = new mongoose.Types.ObjectId(noteId);
@@ -30,36 +22,24 @@ async function getNoteById(req, res) {
     const userNote = await noteService.getNoteById(noteObjectId, userObjectId);
     console.log(userNote);
     res.json(userNote);
-    deferred.resolve();
   } catch (error) {
     console.error(error);
     res.status(400).json({ message: error.message || 'Bad Request' });
-    deferred.reject(error);
   }
-
-  return deferred.promise;
 }
 
 async function createNote(req, res, next) {
-  const deferred = q.defer();
-
   try {
     const { title, content } = req.body;
     const ownerId = req.user._id;
     const savedNote = await noteService.createNote(title, content, ownerId);
     res.status(201).json(savedNote);
-    deferred.resolve();
   } catch (error) {
     next(error);
-    deferred.reject(error);
   }
-
-  return deferred.promise;
 }
 
 async function updateNote(req, res, next) {
-  const deferred = q.defer();
-
   try {
     const noteId = req.params.id;
     const { title, content } = req.body;
@@ -67,24 +47,20 @@ async function updateNote(req, res, next) {
 
     const updatedNote = await noteService.updateNote(noteId, title, content, ownerId);
     res.json(updatedNote);
-    deferred.resolve();
-  } catch (error) {
-    deferred.reject(error);
-  }
 
-  return deferred.promise;
+
+  } catch (error) {
+    throw error;
+  }
 }
 
 async function deleteNote(req, res, next) {
-  const deferred = q.defer();
-
   try {
     const noteObjectId = req.params.id;
     const ownerObjectId = req.user.id;
     await noteService.deleteNote(noteObjectId, ownerObjectId);
 
     res.json({ message: 'Note deleted successfully' });
-    deferred.resolve();
   } catch (error) {
     console.error(error);
 
@@ -93,16 +69,10 @@ async function deleteNote(req, res, next) {
     } else {
       res.status(500).json({ message: 'Internal Server Error' });
     }
-
-    deferred.reject(error);
   }
-
-  return deferred.promise;
 }
 
 async function shareNote(req, res, next) {
-  const deferred = q.defer();
-
   try {
     const noteId = req.params.id;
     const ownerId = req.user.id;
@@ -110,7 +80,6 @@ async function shareNote(req, res, next) {
     await noteService.shareNote(noteId, username, ownerId);
 
     res.json({ message: 'Note shared successfully' });
-    deferred.resolve();
   } catch (error) {
     console.error(error);
 
@@ -119,28 +88,7 @@ async function shareNote(req, res, next) {
     } else {
       res.status(500).json({ message: 'Internal Server Error' });
     }
-
-    deferred.reject(error);
   }
-
-  return deferred.promise;
-}
-
-async function searchNotes(req, res, next) {
-  const deferred = q.defer();
-
-  try {
-    const query = req.query.query;
-    const ownerId = req.user._id;
-    const userNotes = await noteService.searchNotes(query, ownerId);
-    res.json(userNotes);
-    deferred.resolve();
-  } catch (error) {
-    next(error);
-    deferred.reject(error);
-  }
-
-  return deferred.promise;
 }
 
 // (async () => {
@@ -154,6 +102,17 @@ async function searchNotes(req, res, next) {
 
 
 // createIndex('notes');
+
+async function searchNotes(req, res, next) {
+  try {
+    const query = req.query.query;
+    const ownerId = req.user._id;
+    const userNotes = await noteService.searchNotes(query, ownerId);
+    res.json(userNotes);
+  } catch (error) {
+    next(error);
+  }
+}
 
 module.exports = { getNotes, getNoteById, createNote, updateNote, deleteNote, shareNote, searchNotes };
 
