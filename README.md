@@ -208,7 +208,9 @@ These edge cases are implemented to ensure data integrity, prevent unintended ac
 
 
 ## .env contents 🤫
+
 MONGODB_URI = "your-mongodb-uri"
+
 PASSPORT_SECRET_KEY = 'your-secret-key'
 
 Feel free to customize it further based on your preferences or any additional details you'd like to include!
