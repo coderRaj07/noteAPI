@@ -64,7 +64,7 @@ The project follows a modular structure, separating concerns into different fold
 5. Start the application:
 
    ```bash
-   npm start
+   nodemon app
    ```
 
 6. The API will be available at `http://localhost:8001`.
