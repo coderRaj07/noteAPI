@@ -47,7 +47,7 @@ The project follows a modular structure, separating concerns into different fold
 1. Clone this repository:
 
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/coderRaj07/noteAPI
    cd noteAPI
    ```
 
@@ -205,5 +205,12 @@ npx jest tests/test.js
   - The API enforces that only the owner of a note can edit its content or details. Other users with whom the note is shared are restricted from editing the note.
 
 These edge cases are implemented to ensure data integrity, prevent unintended actions, and maintain a secure and logical flow of operations within the Note API.
+
+
+## .env contents 🤫
+
+MONGODB_URI = "your-mongodb-uri"
+
+PASSPORT_SECRET_KEY = 'your-secret-key'
 
 Feel free to customize it further based on your preferences or any additional details you'd like to include!
