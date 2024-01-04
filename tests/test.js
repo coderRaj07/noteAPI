@@ -64,7 +64,7 @@ describe('End-to-End Tests', () => {
         expect(res.body.content).toEqual('This note has been updated');
     });
 
-    it('should share a note with another user', async () => {
+    it('shouldnot share note with another user if no note', async () => {
         // Create another user for sharing
         await request(app)
             .post('/api/auth/signup')
