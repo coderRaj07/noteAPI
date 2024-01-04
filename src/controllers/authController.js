@@ -1,15 +1,15 @@
-// src/controllers/authController.js
 const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const dotenv = require('dotenv');
+const q = require('q');
 const authService = require('../services/authService');
 const User = require('../models/User');
-dotenv.config()
+dotenv.config();
 
 passport.use(new LocalStrategy(
   {
-    usernameField: 'username', 
+    usernameField: 'username',
     passwordField: 'password',
   },
   async (username, password, done) => {
@@ -27,18 +27,15 @@ passport.use(new LocalStrategy(
   }
 ));
 
-
 function generateAccessToken(user) {
-  
-  const secretKey = process.env.PASSPORT_SECRET_KEY; 
+  const secretKey = process.env.PASSPORT_SECRET_KEY;
   const payload = {
     id: user._id,
     username: user.username,
   };
 
-  
   const options = {
-    expiresIn: '1h', 
+    expiresIn: '1h',
   };
 
   const accessToken = jwt.sign(payload, secretKey, options);
@@ -47,32 +44,45 @@ function generateAccessToken(user) {
 }
 
 // Sign-up route
-async function signUp(req, res) {
-  try {
-    const { username, password } = req.body;
-    await authService.signUp(username, password);
-    res.status(201).json({ message: 'User created successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(400).json({ message: error.message || 'Bad Request' });
-  }
+function signUp(req, res) {
+  const deferred = q.defer();
+
+  authService.signUp(req.body.username, req.body.password)
+    .then(() => {
+      res.status(201).json({ message: 'User created successfully' });
+      deferred.resolve();
+    })
+    .catch((error) => {
+      console.error(error);
+      res.status(400).json({ message: error.message || 'Bad Request' });
+      deferred.reject(error);
+    });
+
+  return deferred.promise;
 }
 
 // Login route
 function login(req, res, next) {
-  passport.authenticate('local', { session: false }, (err, user) => {
-    if (err) {
-      console.error(err);
-      return res.status(500).json({ message: 'Internal Server Error' });
-    }
+  const deferred = q.defer();
 
-    if (!user) {
-      return res.status(401).json({ message: 'Unauthorized' });
+  passport.authenticate('local', { session: false }, async (err, user) => {
+    try {
+      if (err) {
+        console.error(err);
+        deferred.reject({ message: 'Internal Server Error' });
+      } else if (!user) {
+        deferred.reject({ message: 'Unauthorized' });
+      } else {
+        const token = generateAccessToken(user);
+        res.json({ accessToken: token });
+        deferred.resolve();
+      }
+    } catch (error) {
+      deferred.reject(error);
     }
-
-    const token = generateAccessToken(user);
-    res.json({ accessToken: token });
   })(req, res, next);
+
+  return deferred.promise;
 }
 
 module.exports = { signUp, login, generateAccessToken };
