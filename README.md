@@ -206,4 +206,9 @@ npx jest tests/test.js
 
 These edge cases are implemented to ensure data integrity, prevent unintended actions, and maintain a secure and logical flow of operations within the Note API.
 
+
+## .env contents 🤫
+MONGODB_URI = "your-mongodb-uri"
+PASSPORT_SECRET_KEY = 'your-secret-key'
+
 Feel free to customize it further based on your preferences or any additional details you'd like to include!
