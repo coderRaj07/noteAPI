@@ -107,7 +107,7 @@ To test this app follow these steps:
 8. Run Jest tests for v2 with Redis:
 
    ```bash
-   npx jest tests/test_redis.js
+   npx jest test
    ```
 
 ## API Endpoints 🚀
