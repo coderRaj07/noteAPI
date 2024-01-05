@@ -1,4 +1,4 @@
-// src/services/noteRoutes.js
+//src/services/noteRoutes.js
 const express = require('express');
 const {
   getNoteById,
