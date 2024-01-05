@@ -52,12 +52,12 @@ The project follows a modular structure, separating concerns into different fold
 - **tests:** Includes test scripts for Jest to ensure the correctness of the API.
 ## Installation and Testing 🛠️🧪 (v2 with Redis Cache)
 
-To test the v2 features of this app with Redis cache implementation, users need to switch to the `simple-redis` branch and follow these steps:
+To test this app follow these steps:
 
 1. Clone this repository:
 
    ```bash
-   git clone -b simple-redis https://github.com/coderRaj07/noteAPI
+   git clone https://github.com/coderRaj07/noteAPI
    cd noteAPI
    ```
 
