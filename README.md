@@ -43,8 +43,13 @@ This repository contains the source code for a simple Note API that allows users
 
 ## Project Structure 🏗️
 
-...
+The project follows a modular structure, separating concerns into different folders:
 
+- **controllers:** Handles incoming requests, processes them, and calls functions from the `services` folder.
+- **services:** Contains business logic and interacts with the `model` folder to perform CRUD operations.
+- **model:** Defines the schema using MongoDB's Mongoose library.
+- **routes:** Defines the API routes and connects them to the appropriate controllers.
+- **tests:** Includes test scripts for Jest to ensure the correctness of the API.
 ## Installation and Testing 🛠️🧪 (v2 with Redis Cache)
 
 To test the v2 features of this app with Redis cache implementation, users need to switch to the `simple-redis` branch and follow these steps:
@@ -71,6 +76,8 @@ To test the v2 features of this app with Redis cache implementation, users need 
    ```bash
    docker run -d --name redis-stack -p 6379:6379 -p 1008:8001 redis/redis-stack:latest
    ```
+
+  Make sure that Docker Daemon or Docker-Desktop is running in the background to avoid docker daemon not running issue
 
    Or, if Redis is already installed, users can stop and remove unwanted packages to avoid conflicts:
 
