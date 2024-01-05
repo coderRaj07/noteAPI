@@ -1,6 +1,6 @@
-# Note API 📝
+# Note API 📝 (v2 with Redis Cache Implementation)
 
-This repository contains the source code for a simple Note API that allows users to manage and share notes.
+This repository contains the source code for a simple Note API that allows users to manage and share notes. The v2 version includes Redis cache implementation for enhanced performance.
 
 ## Technologies Used 🚀
 
@@ -32,22 +32,27 @@ This repository contains the source code for a simple Note API that allows users
 - **Scalability:** Elasticsearch is designed to scale horizontally, making it suitable for handling large volumes of data.
 - **Real-Time Analytics:** Elasticsearch provides real-time analytics capabilities, allowing users to quickly analyze and visualize data.
 
+### 4. Redis (v2 Feature)
+
+[Redis](https://redis.io/) is an open-source, in-memory data structure store used as a caching layer to improve API performance.
+
+**Why Redis?**
+- **In-Memory Storage:** Redis stores data in memory, providing faster read and write operations compared to traditional disk-based databases.
+- **Key-Value Store:** Redis uses a simple key-value data model, making it efficient for caching and quick data retrieval.
+- **Scalability:** Redis can be easily scaled horizontally, allowing for increased performance as the user base grows.
+
 ## Project Structure 🏗️
 
-The project follows a modular structure, separating concerns into different folders:
+...
 
-- **controllers:** Handles incoming requests, processes them, and calls functions from the `services` folder.
-- **services:** Contains business logic and interacts with the `model` folder to perform CRUD operations.
-- **model:** Defines the schema using MongoDB's Mongoose library.
-- **routes:** Defines the API routes and connects them to the appropriate controllers.
-- **tests:** Includes test scripts for Jest to ensure the correctness of the API.
+## Installation and Testing 🛠️🧪 (v2 with Redis Cache)
 
-## Installation 🛠️
+To test the v2 features of this app with Redis cache implementation, users need to switch to the `simple-redis` branch and follow these steps:
 
 1. Clone this repository:
 
    ```bash
-   git clone https://github.com/coderRaj07/noteAPI
+   git clone -b simple-redis https://github.com/coderRaj07/noteAPI
    cd noteAPI
    ```
 
@@ -61,21 +66,42 @@ The project follows a modular structure, separating concerns into different fold
 
 4. Set up an Elasticsearch cluster and configure the connection in `config/elasticsearch.js`.
 
-5. Start the application:
+5. Ensure that Redis server is running. Users can choose to run it using Docker with the following command:
+
+   ```bash
+   docker run -d --name redis-stack -p 6379:6379 -p 1008:8001 redis/redis-stack:latest
+   ```
+
+   Or, if Redis is already installed, users can stop and remove unwanted packages to avoid conflicts:
+
+   ```bash
+   # For Snap Installations
+   sudo snap stop redis
+   ps aux | grep redis  # Ensure the process is stopped
+   sudo snap remove redis
+   sudo rm -rf /var/snap/redis/
+
+   # For APT Installations
+   sudo systemctl stop redis-server
+   sudo apt remove --purge redis-server
+   sudo rm -rf /etc/redis/
+   sudo rm -rf /var/lib/redis/
+   sudo rm -rf /var/log/redis/
+   ```
+
+6. Start the application:
 
    ```bash
    nodemon app
    ```
 
-6. The API will be available at `http://localhost:8001`.
+7. The API will be available at `http://localhost:8001`.
 
-## Testing 🧪
+8. Run Jest tests for v2 with Redis:
 
-Run Jest tests using the following command:
-
-```bash
-npx jest tests/test.js
-```
+   ```bash
+   npx jest tests/test_redis.js
+   ```
 
 ## API Endpoints 🚀
 
