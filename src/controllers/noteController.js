@@ -35,8 +35,8 @@ async function createNote(req, res, next) {
     const savedNote = await noteService.createNote(title, content, ownerId);
     res.status(201).json(savedNote);
   } catch (error) {
-    console.error("Error in createNote:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    const errorMessage = error.message || "Internal Server Error";
+    res.status(500).json({ error: errorMessage });
   }
 }
 
@@ -50,8 +50,8 @@ async function updateNote(req, res, next) {
     res.json(updatedNote);
 
   } catch (error) {
-    console.error("Error in updateNote:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+    const errorMessage = error.message || "Internal Server Error";
+    res.status(500).json({ error: errorMessage });
   }
 }
 
@@ -112,9 +112,13 @@ async function searchNotes(req, res, next) {
     res.json(userNotes);
   } catch (error) {
     console.error("Error in searchNotes:", error);
-    res.status(500).json({ error: "Internal Server Error" });
+
+    const errorMessage = error.message || "Internal Server Error";
+
+    res.status(500).json({ error: errorMessage });
   }
 }
+
 
 module.exports = { getNotes, getNoteById, createNote, updateNote, deleteNote, shareNote, searchNotes };
 
